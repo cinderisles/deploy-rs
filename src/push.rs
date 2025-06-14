@@ -168,7 +168,10 @@ pub async fn build_profile_remotely(data: &PushProfileData<'_>, derivation_name:
         Some(ref x) => x,
         None => &data.deploy_data.node.node_settings.hostname,
     };
-    let store_address = format!("ssh-ng://{}@{}", data.deploy_defs.ssh_user, hostname);
+
+    let compress = data.deploy_data.merged_settings.compress.unwrap_or_else(|| false);
+
+    let store_address = format!("ssh-ng://{}@{}?compress={}", data.deploy_defs.ssh_user, hostname, compress);
 
     let ssh_opts_str = data.deploy_data.merged_settings.ssh_opts.join(" ");
 
