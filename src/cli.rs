@@ -76,19 +76,19 @@ pub struct Opts {
     #[arg(long, allow_hyphen_values = true)]
     ssh_opts: Option<String>,
     /// Override the SSH compression when using `nix copy`
-    #[clap(long)]
+    #[arg(long, action = clap::ArgAction::SetTrue)]
     compress: Option<bool>,
     /// Override if the connecting to the target node should be considered fast
-    #[arg(long)]
+    #[arg(long, action = clap::ArgAction::SetTrue)]
     fast_connection: Option<bool>,
     /// Override if a rollback should be attempted if activation fails
-    #[arg(long)]
+    #[arg(long, action = clap::ArgAction::SetTrue)]
     auto_rollback: Option<bool>,
     /// Override hostname used for the node
     #[arg(long)]
     hostname: Option<String>,
     /// Make activation wait for confirmation, or roll back after a period of time
-    #[arg(long)]
+    #[arg(long, action = clap::ArgAction::SetTrue)]
     magic_rollback: Option<bool>,
     /// How long activation should wait for confirmation (if using magic-rollback)
     #[arg(long)]
@@ -106,13 +106,13 @@ pub struct Opts {
     #[arg(long)]
     boot: bool,
     /// Revoke all previously succeeded deploys when deploying multiple profiles
-    #[arg(long)]
+    #[arg(long, action = clap::ArgAction::SetTrue)]
     rollback_succeeded: Option<bool>,
     /// Which sudo command to use. Must accept at least two arguments: user name to execute commands as and the rest is the command to execute
     #[arg(long)]
     sudo: Option<String>,
     /// Prompt for sudo password during activation.
-    #[arg(long)]
+    #[arg(long, action = clap::ArgAction::SetTrue)]
     interactive_sudo: Option<bool>,
     /// File for the sudo password with sops integration
     #[arg(long)]
