@@ -787,8 +787,6 @@ pub async fn run(args: Option<&ArgMatches>) -> Result<(), RunError> {
         &deploy::LoggerType::Deploy,
     )?;
 
-    debug!("Args: {args:?}");
-
     if opts.generate_completion.is_some() {
         let shell = opts.generate_completion.unwrap();
         let mut cmd = <Opts as clap::CommandFactory>::command();
