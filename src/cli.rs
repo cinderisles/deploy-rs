@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use std::io::{stdin, stdout, Write};
 use std::str::Utf8Error;
 
-use clap::{ArgMatches, FromArgMatches, Parser, ValueHint};
+use clap::{ArgMatches, Parser, FromArgMatches};
 
 use crate as deploy;
 
@@ -26,14 +26,14 @@ use tokio::process::Command;
 #[command(version = "1.0", author = "Serokell <https://serokell.io/>")]
 pub struct Opts {
     /// The flake to deploy
-    #[arg(group = "deploy", value_hint = ValueHint::DirPath)]
+    #[arg(group = "deploy")]
     target: Option<String>,
 
     /// A list of flakes to deploy alternatively
-    #[arg(long, group = "deploy", num_args = 1.., value_hint = ValueHint::DirPath)]
+    #[arg(long, group = "deploy", num_args = 1..)]
     targets: Option<Vec<String>>,
     /// Treat targets as files instead of flakes
-    #[clap(short, long, value_hint = ValueHint::AnyPath)]
+    #[clap(short, long)]
     file: Option<String>,
     /// Check signatures when using `nix copy`
     #[arg(short, long)]
@@ -48,14 +48,14 @@ pub struct Opts {
     #[arg(short, long)]
     debug_logs: bool,
     /// Directory to print logs to (including the background activation process)
-    #[arg(long, value_hint = ValueHint::DirPath)]
+    #[arg(long)]
     log_dir: Option<String>,
 
     /// Keep the build outputs of each built profile
     #[arg(short, long)]
     keep_result: bool,
     /// Location to keep outputs from built profiles in
-    #[arg(short, long, value_hint = ValueHint::DirPath)]
+    #[arg(short, long)]
     result_path: Option<String>,
 
     /// Skip the automatic pre-build checks
@@ -67,10 +67,10 @@ pub struct Opts {
     remote_build: bool,
 
     /// Override the SSH user with the given value
-    #[arg(long, value_hint = ValueHint::Username)]
+    #[arg(long)]
     ssh_user: Option<String>,
     /// Override the profile user with the given value
-    #[arg(long, value_hint = ValueHint::Username)]
+    #[arg(long)]
     profile_user: Option<String>,
     /// Override the SSH options used
     #[arg(long, allow_hyphen_values = true)]
@@ -85,7 +85,7 @@ pub struct Opts {
     #[arg(long, action = clap::ArgAction::SetTrue)]
     auto_rollback: Option<bool>,
     /// Override hostname used for the node
-    #[arg(long, value_hint = ValueHint::Hostname)]
+    #[arg(long)]
     hostname: Option<String>,
     /// Make activation wait for confirmation, or roll back after a period of time
     #[arg(long, action = clap::ArgAction::SetTrue)]
@@ -97,7 +97,7 @@ pub struct Opts {
     #[arg(long)]
     activation_timeout: Option<u16>,
     /// Where to store temporary files (only used by magic-rollback)
-    #[arg(long, value_hint = ValueHint::DirPath)]
+    #[arg(long)]
     temp_path: Option<PathBuf>,
     /// Show what will be activated on the machines
     #[arg(long)]
@@ -120,9 +120,6 @@ pub struct Opts {
     /// Key for the sudo password with sops integration
     #[arg(long)]
     sudo_secret: Option<String>,
-    /// Generate completions for a shell
-    #[arg(long, hide = true)]
-    generate_completion: Option<clap_complete::Shell>,
 }
 
 /// Returns if the available Nix installation supports flakes
@@ -786,15 +783,6 @@ pub async fn run(args: Option<&ArgMatches>) -> Result<(), RunError> {
         opts.log_dir.as_deref(),
         &deploy::LoggerType::Deploy,
     )?;
-
-    if opts.generate_completion.is_some() {
-        let shell = opts.generate_completion.unwrap();
-        let mut cmd = <Opts as clap::CommandFactory>::command();
-
-        info!("Generating completion for {:?}", shell);
-        clap_complete::generate(shell, &mut cmd, "deploy", &mut std::io::stdout());
-        return Ok(());
-    }
 
     if opts.dry_activate && opts.boot {
         error!("Cannot use both --dry-activate & --boot!");
