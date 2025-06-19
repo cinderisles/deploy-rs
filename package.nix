@@ -20,23 +20,6 @@ rustPlatform.buildRustPackage {
 
   cargoLock.lockFile = ./Cargo.lock;
 
-  postInstall = lib.optionalString (stdenv.hostPlatform.emulatorAvailable buildPackages) (
-    let
-      emulator = stdenv.hostPlatform.emulator buildPackages;
-    in
-    ''
-      mkdir completions
-
-      for shell in bash zsh fish; do
-        ${emulator} $out/bin/deploy --generate-completion $shell > completions/deploy.$shell
-      done
-
-      installShellCompletion completions/*
-    ''
-  );
-
-  nativeBuildInputs = [ installShellFiles ];
-
   buildInputs = lib.optionals stdenv.isDarwin [
     darwin.apple_sdk.frameworks.CoreFoundation
     darwin.apple_sdk.frameworks.CoreServices
