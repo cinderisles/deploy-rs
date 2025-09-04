@@ -116,7 +116,7 @@ pub struct Opts {
     interactive_sudo: Option<bool>,
     /// File for the sudo password with sops integration
     #[arg(long)]
-    sudo_file: Option<PathBuf>,
+    sudo_file: Option<String>,
     /// Key for the sudo password with sops integration
     #[arg(long)]
     sudo_secret: Option<String>,
@@ -615,7 +615,7 @@ async fn run_deploy(
                 .await
                 .map_err(|err| {
                     RunDeployError::Sops(SopsError::SopsFailedDecryption(
-                        path.to_string_lossy().into(),
+                        path.into(),
                         err,
                     ))
                 })?;

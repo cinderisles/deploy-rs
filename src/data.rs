@@ -41,7 +41,7 @@ pub struct GenericSettings {
     pub interactive_sudo: Option<bool>,
     // sops integration for secrets
     #[serde(rename(deserialize = "sudoFile"))]
-    pub sudo_file: Option<PathBuf>,
+    pub sudo_file: Option<String>,
     #[serde(rename(deserialize = "sudoSecret"))]
     pub sudo_secret: Option<String>,
 }
