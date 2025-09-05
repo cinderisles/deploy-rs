@@ -167,7 +167,7 @@ pub struct CmdOverrides {
     pub activation_timeout: Option<u16>,
     pub sudo: Option<String>,
     pub interactive_sudo: Option<bool>,
-    pub sudo_file: Option<String>,
+    pub sudo_file: Option<PathBuf>,
     pub sudo_secret: Option<String>,
     pub dry_activate: bool,
     pub remote_build: bool,
